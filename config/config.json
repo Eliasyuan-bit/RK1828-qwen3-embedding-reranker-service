@@ -1,0 +1,18 @@
+{
+  "embedding": {
+    "model_path": "/userdata/Qwen3-Embedding-0.6B-w4a16-8-2048/Qwen3-Embedding-0.6B.rknn",
+    "weight_path": "/userdata/Qwen3-Embedding-0.6B-w4a16-8-2048/Qwen3-Embedding-0.6B.weight",
+    "tokenizer_path": "/userdata/Qwen3-Embedding-0.6B-w4a16-8-2048/Qwen3-Embedding-0.6B.tokenizer.gguf",
+    "embedding_path": "/userdata/Qwen3-Embedding-0.6B-w4a16-8-2048/Qwen3-Embedding-0.6B.embed.bin",
+    "device_id": "0004:41:00.0",
+    "core_mask": "0xff"
+  },
+  "reranker": {
+    "model_path": "/userdata/Qwen3-Reranker-0.6B-w4a16-8-2048/Qwen3-Reranker-0.6B.rknn",
+    "weight_path": "/userdata/Qwen3-Reranker-0.6B-w4a16-8-2048/Qwen3-Reranker-0.6B.weight",
+    "tokenizer_path": "/userdata/Qwen3-Reranker-0.6B-w4a16-8-2048/Qwen3-Reranker-0.6B.tokenizer.gguf",
+    "embedding_path": "/userdata/Qwen3-Reranker-0.6B-w4a16-8-2048/Qwen3-Reranker-0.6B.embed.bin",
+    "device_id": "0004:41:00.0",
+    "core_mask": "0xff"
+  }
+}

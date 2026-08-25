@@ -1,0 +1,7 @@
+/build/
+/dist/
+*.rknn
+*.weight
+*.gguf
+*.embed.bin
+*.log
