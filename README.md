@@ -18,12 +18,15 @@ Embedding 和 Reranker 当前都使用第三张卡，配置中的 core_mask 为 
 ## 构建
 
 ~~~
-cmake -S . -B build -DRKNN3_MODEL_ZOO_ROOT=/path/to/rknn3-model-zoo
-cmake --build build -j
+export RKNN3_MODEL_ZOO_ROOT=/path/to/rknn3-model-zoo
+export RK1828_C_COMPILER=/path/to/aarch64-linux-gnu-gcc
+export RK1828_CXX_COMPILER=/path/to/aarch64-linux-gnu-g++
+./scripts/build-rk1828.sh
 ~~~
 
-也可使用 scripts/build-rk1828.sh；它需要 RKNN3_MODEL_ZOO_ROOT、
-RK1828_C_COMPILER 与 RK1828_CXX_COMPILER 三个环境变量。
+脚本会传入 CMAKE_SYSTEM_PROCESSOR=aarch64，并使用上述交叉编译器生成
+RK3588 板端可执行文件。只有直接在 RK3588 板端编译时，才可以使用系统
+编译器运行普通 CMake 命令。
 
 ## 打包与部署
 
