@@ -485,15 +485,23 @@ int main(int argc, char **argv)
                 const auto& documents = request.at("documents");
                 if (!documents.is_array()) throw std::runtime_error("request.documents must be an array");
                 nlohmann::json scores = nlohmann::json::array();
+                nlohmann::json prefill_tokens_per_candidate = nlohmann::json::array();
+                int64_t n_prefill_tokens = 0;
                 for (const auto& item : documents) {
                     const std::string text = item.is_string() ? item.get<std::string>() : item.at("text").get<std::string>();
                     formatted_prompt = format_reranker_prompt(instruction.c_str(), request_query.c_str(), text.c_str());
                     tensor.prompt = formatted_prompt.c_str();
                     ret = inference_qwen3_reranker(&rknn_app_ctx, tensor, n_inputs, &perf);
                     if (ret != 0) throw std::runtime_error("reranker inference failed: " + std::to_string(ret));
+                    prefill_tokens_per_candidate.push_back(perf.n_prefill_tokens);
+                    n_prefill_tokens += perf.n_prefill_tokens;
                     scores.push_back(model_output[0]); // raw relevance logit; preserve ranking fidelity
                 }
-                reply = {{"id", id}, {"ok", true}, {"scores", scores}};
+                reply = {{"id", id},
+                         {"ok", true},
+                         {"scores", scores},
+                         {"n_prefill_tokens", n_prefill_tokens},
+                         {"prefill_tokens_per_candidate", prefill_tokens_per_candidate}};
             } catch (const std::exception& e) {
                 reply = {{"ok", false}, {"error", e.what()}};
             }

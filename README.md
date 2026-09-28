@@ -75,11 +75,22 @@ Embedding 请求（单行 JSON）：
 {"id":"embed-1","input":["检索增强生成","向量检索"]}
 ~~~
 
+响应中的 `n_prefill_tokens` 是本次所有输入的原生 prefill token 总数，
+`prefill_tokens_per_input` 按输入顺序给出每条文本的 token 数：
+
+~~~json
+{"id":"embed-1","ok":true,"data":[[0.1],[0.2]],"n_prefill_tokens":12,"prefill_tokens_per_input":[7,5]}
+~~~
+
 Reranker 请求：
 
 ~~~json
 {"id":"rank-1","query":"什么是向量检索？","documents":["向量检索通过相似度在嵌入空间查找文本。","今天北京天气晴朗。"]}
 ~~~
+
+Reranker 同样返回总数 `n_prefill_tokens`，并通过
+`prefill_tokens_per_candidate` 给出每个完整 Query-Document Prompt 的 token 数。
+该计数包含每个候选重复使用的系统提示、任务指令、Query、Document 和特殊标记。
 
 Reranker 返回与输入 documents 顺序一致的原始 relevance logits，仅用于排序，
 不能将其视为已校准概率。

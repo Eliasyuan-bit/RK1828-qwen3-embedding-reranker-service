@@ -481,15 +481,23 @@ int main(int argc, char **argv)
                     throw std::runtime_error("request.input must be a string or string array");
                 }
                 nlohmann::json vectors = nlohmann::json::array();
+                nlohmann::json prefill_tokens_per_input = nlohmann::json::array();
+                int64_t n_prefill_tokens = 0;
                 for (const std::string& text : texts) {
                     tensor.prompt = text.c_str();
                     ret = inference_qwen3_embedding(&rknn_app_ctx, tensor, n_inputs, &perf);
                     if (ret != 0) throw std::runtime_error("embedding inference failed: " + std::to_string(ret));
+                    prefill_tokens_per_input.push_back(perf.n_prefill_tokens);
+                    n_prefill_tokens += perf.n_prefill_tokens;
                     nlohmann::json vector = nlohmann::json::array();
                     for (int i = 0; i < output_tensors[0].attr->n_elems; ++i) vector.push_back(model_output[i]);
                     vectors.push_back(std::move(vector));
                 }
-                reply = {{"id", id}, {"ok", true}, {"data", vectors}};
+                reply = {{"id", id},
+                         {"ok", true},
+                         {"data", vectors},
+                         {"n_prefill_tokens", n_prefill_tokens},
+                         {"prefill_tokens_per_input", prefill_tokens_per_input}};
             } catch (const std::exception& e) {
                 reply = {{"ok", false}, {"error", e.what()}};
             }
